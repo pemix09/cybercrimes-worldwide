@@ -23,3 +23,5 @@ do
     echo "Number of processed lines: $processedLineNumber"
     echo $newLine >> $destinationFileName
 done < "$filename"
+
+echo "Processing finished. Processed lines: $processedLineNumber"
