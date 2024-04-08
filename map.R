@@ -31,7 +31,7 @@ world_map <- leaflet(
     maxZoom = 10
   )
 ) %>%
-  addProviderTiles("CartoDB.Positron",
+  addProviderTiles("CartoDB.PositronNoLabels",
     options = providerTileOptions(
       noWrap = TRUE
     )
