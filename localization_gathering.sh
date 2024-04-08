@@ -2,7 +2,7 @@
 
 # get filename from first argument
 filename="$1"
-destinationFileName="processed-$filename"
+destinationFileName="processed-with-source-dest,proxy$filename"
 processedLineNumber=0
 
 #from file read columns and save them to variables
@@ -17,7 +17,11 @@ do
     destCity=$( echo "$destInfo" | grep -i -E 'city:|City:' | cut -w -f2)
     destCountry=$( echo "$destInfo" | grep -i -E 'country:|Country:' | cut -w -f2)
 
-    newLine="$Timestamp,$SourceIP,$DestinationIP,$SourcePort,$DestinationPort,$Protocol,$PacketLength,$PacketType,$TrafficType,$PayloadData,$MalwareIndicators,$AnomalyScores,$Alerts,$AttackType,$AttackSignature,$ActionTaken,$SeverityLevel,$UserInformation,$DeviceInformation,$NetworkSegment,$GeoLocation,$ProxyInformation,$FirewallLogs,$IDSIPSAlerts,$LogSource,$destCity,$destCountry"
+    proxyInfo=$(whois $ProxyInformation | grep -i -E 'city:|country:')
+    proxyCity=$( echo "$proxyInfo" | grep -i -E 'city:|City:' | cut -w -f2)
+    proxyCountry=$( echo "$proxyInfo" | grep -i -E 'country:|Country:' | cut -w -f2)
+
+    newLine="$Timestamp,$SourceIP,$DestinationIP,$SourcePort,$DestinationPort,$Protocol,$PacketLength,$PacketType,$TrafficType,$PayloadData,$MalwareIndicators,$AnomalyScores,$Alerts,$AttackType,$AttackSignature,$ActionTaken,$SeverityLevel,$UserInformation,$DeviceInformation,$NetworkSegment,$GeoLocation,$ProxyInformation,$FirewallLogs,$IDSIPSAlerts,$LogSource,$destCity,$destCountry,$sourceCity,$sourceCountry,$proxyCity,$proxyCountry"
 
     processedLineNumber=$((processedLineNumber+1))
     echo "Number of processed lines: $processedLineNumber"
