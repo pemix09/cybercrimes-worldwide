@@ -1,7 +1,7 @@
 library(ggplot2)
 library(dplyr)
 
-df <- read.csv("C:/Users/karol/Pulpit/Inf_sem1/wizualizacja danych/cybersecurity_attacks.csv")
+df <- read.csv("cybersecurity_attacks.csv")
 
 #piechart z typem ataków 
 df_attackType <- df[ ,14]
