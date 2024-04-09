@@ -1,15 +1,17 @@
-data <- read.csv("cybersecurity_attacks.csv")
-
 library(geojsonio)
+library(leaflet)
+library(RColorBrewer)
+library(dplyr)
+source("data.R")
+
 world_spdf <- geojson_read("world.geojson", what = "sp")
 
-library(RColorBrewer)
 mybins <- c(0, 10, 20, 50, 100, 500, 1000, Inf)
 
-world_spdf@data$pop_est[which(world_spdf@data$pop_est == 0)] <- NA
-world_spdf@data$pop_est <- as.numeric(as.character(world_spdf@data$pop_est)) / 1000000 %>% round(2)
-
-mypalette <- colorBin(palette = "Blues", domain = world_spdf@data$pop_est, na.color = "transparent", bins = mybins)
+# TODO nie działa
+# world_spdf <- sf::st_join(world_spdf, attacks_per_country, by = c("iso_a2" = "Country"))
+# world_spdf@data <- left_join(world_spdf@data, attacks_per_country, by = c("iso_a2" = "Country"))
+# mypalette <- colorBin(palette = "Blues", domain = world_spdf@data$Destination_count, na.color = "transparent", bins = mybins)
 
 mytext <- paste(
   "Country: ", world_spdf@data$name_pl, "<br/>",
@@ -19,7 +21,6 @@ mytext <- paste(
 ) %>%
   lapply(htmltools::HTML)
 
-library(leaflet)
 # # Basic choropleth with leaflet?
 world_map <- leaflet(
   world_spdf,
