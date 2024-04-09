@@ -52,4 +52,4 @@ world_map <- leaflet(
       direction = "auto"
     )
   ) %>%
-  addLegend(pal = mypalette, values = ~pop_est, opacity = 0.9, title = "Area", position = "bottomleft")
+  addLegend(pal = mypalette, values = ~pop_est, opacity = 0.9, title = "Population", position = "bottomleft")
