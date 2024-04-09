@@ -4,11 +4,7 @@ data <- read.csv(
   fill = TRUE
 )
 
-countries_names <- read.csv(
-  "Countries.csv",
-  fileEncoding = "UTF-8",
-  sep = ";"
-)
+countries_names <- read.csv("countries.csv")
 
 attack_destinations_count_per_country <- data %>%
   group_by(Destination.Country) %>%
