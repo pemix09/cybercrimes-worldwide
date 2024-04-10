@@ -16,7 +16,7 @@ mybins <- c(0, 10, 20, 50, 100, 500, 1000, Inf)
 mytext <- paste(
   "Country: ", world_spdf@data$name_pl, "<br/>",
   "ISO: ", world_spdf@data$adm0_iso, "<br/>",
-  "Population: ", world_spdf@data$pop_est, "<br/>",
+  "Attacks per country: ", attacks_sorted_like_map$Destination_count , "<br/>",
   sep = ""
 ) %>%
   lapply(htmltools::HTML)
@@ -40,7 +40,7 @@ world_map <- leaflet(
   setMaxBounds(-180, -70, 180, 90) %>%
   setView(lng = 0, lat = 20, zoom = 2.9) %>%
   addPolygons(
-    fillColor = ~ mypalette(pop_est),
+    fillColor = ~ mypalette(attacks_sorted_like_map$Destination_count),
     stroke = TRUE,
     fillOpacity = 0.9,
     color = "white",
@@ -53,4 +53,4 @@ world_map <- leaflet(
       direction = "auto"
     )
   ) %>%
-  addLegend(pal = mypalette, values = ~pop_est, opacity = 0.9, title = "Population", position = "bottomleft")
+  addLegend(pal = mypalette, values = ~pop_est, opacity = 0.9, title = "Number of attacks", position = "bottomleft")

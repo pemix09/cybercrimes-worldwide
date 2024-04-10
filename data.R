@@ -21,3 +21,5 @@ attack_sources_count_per_country <- data %>%
   rename(Country = Source.Country, Source_count = count)
 
 attacks_per_country <- full_join(attack_destinations_count_per_country, attack_sources_count_per_country, by = "Country")
+
+attacks_sorted_like_map <- sp::merge(world_spdf, attacks_per_country, by.x="iso_a2", by.y="Country")
