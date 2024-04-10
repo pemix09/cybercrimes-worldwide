@@ -6,16 +6,19 @@ source("data.R")
 
 world_spdf <- geojson_read("world.geojson", what = "sp")
 
+bins <- c(0, 10, 20, 50, 100, 200, 500, 1000, Inf)
+pal <- colorBin("YlOrRd", domain = attacks_sorted_like_map$Source_count, bins = bins)
+
 mytext <- paste(
   "Country: ", world_spdf@data$name_pl, "<br/>",
   "ISO: ", world_spdf@data$adm0_iso, "<br/>",
-  "Attacks per country: ", attacks_sorted_like_map$Destination_count , "<br/>",
+  "Attack sources per country: ", attacks_sorted_like_map$Source_count , "<br/>",
   sep = ""
 ) %>%
   lapply(htmltools::HTML)
 
 # # Basic choropleth with leaflet?
-target_world_map <- leaflet(
+source_world_map <- leaflet(
   world_spdf,
   options = leafletOptions(
     zoomControl = TRUE,
@@ -26,14 +29,14 @@ target_world_map <- leaflet(
   )
 ) %>%
   addProviderTiles("CartoDB.PositronNoLabels",
-    options = providerTileOptions(
-      noWrap = TRUE
-    )
+                   options = providerTileOptions(
+                     noWrap = TRUE
+                   )
   ) %>%
   setMaxBounds(-180, -70, 180, 90) %>%
   setView(lng = 0, lat = 20, zoom = 2.9) %>%
   addPolygons(
-    fillColor = ~ mypalette(attacks_sorted_like_map$Destination_count),
+    fillColor = ~pal(attacks_sorted_like_map$Source_count),
     stroke = TRUE,
     fillOpacity = 0.9,
     color = "white",
@@ -46,4 +49,6 @@ target_world_map <- leaflet(
       direction = "auto"
     )
   ) %>%
-  addLegend(pal = mypalette, values = ~pop_est, opacity = 0.9, title = "Number of incidents", position = "bottomleft")
+  addLegend(pal = pal, values = ~pop_est, opacity = 0.9, title = "Number of attack sources", position = "bottomleft")
+
+

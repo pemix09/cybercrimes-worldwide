@@ -4,23 +4,35 @@ library(leaflet)
 library(geojsonio)
 library(RColorBrewer)
 
-source("map.R")
+source("source_map.R")
+source("target_map.R")
 
 ui <- dashboardPage(
   dashboardHeader(title = "Cybersecurity Attacks"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("World Map", tabName = "map", icon = icon("globe"))
+      menuItem("Target of cybercrimes worldwide", tabName = "target-map", icon = icon("bullseye")),
+      menuItem("Sources of cybercrimes worldwide", tabName = "source-map", icon = icon("play"))
     )
   ),
   dashboardBody(
     tabItems(
       tabItem(
-        tabName = "map",
+        tabName = "target-map",
         box(
           width = 12,
           leafletOutput(
-            "worldmap",
+            "target_worldmap",
+            height = "90vh"
+          ),
+        ),
+      ),
+      tabItem(
+        tabName = "source-map",
+        box(
+          width = 12,
+          leafletOutput(
+            "source_wordlmap",
             height = "90vh"
           ),
         ),
@@ -29,8 +41,11 @@ ui <- dashboardPage(
   )
 )
 server <- function(input, output) {
-  output$worldmap <- renderLeaflet({
-    world_map
+  output$target_worldmap <- renderLeaflet({
+    target_world_map
+  })
+  output$source_wordlmap <- renderLeaflet({
+    source_world_map
   })
 }
 
