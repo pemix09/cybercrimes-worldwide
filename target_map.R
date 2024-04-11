@@ -9,7 +9,7 @@ world_spdf <- geojson_read("world.geojson", what = "sp")
 mytext <- paste(
   "Country: ", world_spdf@data$name_pl, "<br/>",
   "ISO: ", world_spdf@data$adm0_iso, "<br/>",
-  "Registered attacks per country: ", attacks_sorted_like_map$Destination_count , "<br/>",
+  "Registered attacks in country: ", attacks_sorted_like_map$Destination_count , "<br/>",
   sep = ""
 ) %>%
   lapply(htmltools::HTML)
