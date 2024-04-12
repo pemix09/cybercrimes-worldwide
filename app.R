@@ -53,6 +53,16 @@ ui <- navbarPage(
         title = "Countries with Same Source and Destination",
         status = "primary",
         plotOutput("same_source_dest_pie")
+      ),
+      box(
+        title = "Packet Type",
+        status = "primary",
+        plotOutput("packet_type_pie")
+      ),
+      box(
+        title = "Traffic Type",
+        status = "primary",
+        plotOutput("traffic_type_pie")
       )
     ),
     icon = icon("chart-simple")
@@ -181,6 +191,15 @@ server <- function(input, output) {
   # Wykres z typem podjętej akcji
   output$action_taken_pie <- renderPlot({
     pie(table(data$Action.Taken))
+  })
+
+  # Wykres z typem pakietów
+  output$packet_type_pie <- renderPlot({
+    pie(table(data$Packet.Type))
+  })
+  # Wykres z typem ruchu
+  output$traffic_type_pie <- renderPlot({
+    pie(table(data$Traffic.Type))
   })
 
   # Wykres liniowy z rozkładem ataków w czasie
