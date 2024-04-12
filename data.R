@@ -31,3 +31,4 @@ average_payload_lengths_per_country <- data %>%
   filter(Packet.Length != "") %>%
   summarise(average = mean(Packet.Length)) %>%
   rename(Payload_length = average, Country = Source.Country)
+

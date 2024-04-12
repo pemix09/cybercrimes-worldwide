@@ -10,6 +10,9 @@ world_spdf <- sp::merge(world_spdf, attacks_per_country, by.x = "iso_a2", by.y =
 world_spdf <- sp::merge(world_spdf, anomaly_scores_average_per_country, by.x = "iso_a2", by.y = "Country")
 world_spdf <- sp::merge(world_spdf, average_payload_lengths_per_country, by.x = "iso_a2", by.y = "Country")
 
+countries_coords <- world_spdf@data %>%
+  select(iso_a2, longitude = label_x, latitude = label_y)
+
 world_map <- leaflet(
   world_spdf,
   options = leafletOptions(

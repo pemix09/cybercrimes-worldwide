@@ -5,6 +5,7 @@ library(geojsonio)
 library(RColorBrewer)
 library(ggplot2)
 library(dplyr)
+library(geosphere)
 
 source("map.R")
 
@@ -15,7 +16,8 @@ ui <- navbarPage(
     sidebarLayout(
       sidebarPanel(
         selectInput("datatype", "Data Type", choices = c("Target Count", "Source Count", "Anomaly Score", "Payload length")),
-        checkboxInput("legend", "Show legend", TRUE)
+        checkboxInput("legend", "Show legend", TRUE),
+        actionButton("clear_markers", "Clear Markers")
       ),
       mainPanel(
         box(
@@ -99,6 +101,7 @@ server <- function(input, output) {
     pal <- colorpal()
     leafletProxy("map", data = world_spdf) %>%
       clearShapes() %>%
+      clearMarkers() %>%
       addPolygons(
         fillColor = ~ pal(chosenData()),
         stroke = TRUE,
@@ -129,6 +132,45 @@ server <- function(input, output) {
         opacity = 0.9,
       )
     }
+  })
+
+  # Czyszczenie markerów
+  observeEvent(input$clear_markers, {
+    leafletProxy("map") %>%
+      clearMarkers()
+  })
+
+  # Skąd ataki na wybrany kraj
+  observeEvent(input$map_shape_click, {
+    if (input$datatype != "Target Count") {
+      return()
+    }
+    click <- input$map_shape_click
+    country <- world_spdf[world_spdf$woe_id_eh == click$id, ]
+
+    attacking_countries <- data[data$Destination.Country == country$iso_a2, ] %>%
+      select(Source.Country) %>%
+      distinct() %>%
+      rename(iso_a2 = Source.Country)
+    attacking_countries <- left_join(attacking_countries, countries_coords, by = "iso_a2")
+
+    proxy <- leafletProxy("map", data = world_spdf) %>%
+      clearMarkers() %>%
+      addCircleMarkers(
+        data = attacking_countries,
+        lat = ~latitude,
+        lng = ~longitude,
+        radius = 5,
+        color = "red",
+        fill = TRUE,
+        fillOpacity = 0.7,
+        label = ~ paste(iso_a2),
+        labelOptions = labelOptions(
+          style = list("font-weight" = "normal", padding = "3px 8px"),
+          textsize = "13px",
+          direction = "auto"
+        )
+      )
   })
 
   # Wykres z typem ataków
