@@ -52,7 +52,8 @@ ui <- navbarPage(
         status = "primary",
         plotOutput("same_source_dest_pie")
       )
-    )
+    ),
+    icon = icon("chart-simple")
   )
 )
 
