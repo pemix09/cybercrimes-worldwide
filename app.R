@@ -35,6 +35,26 @@ ui <- navbarPage(
     "Charts",
     fluidRow(
       box(
+        title = "Attack Distribution Over Time",
+        status = "primary",
+        plotOutput("attack_time_line")
+      ),
+      box(
+        title = "Protocol Over Time",
+        status = "primary",
+        plotOutput("protocol_over_time")
+      ),
+      box(
+        title = "Attack Type Over Time",
+        status = "primary",
+        plotOutput("attack_type_over_time")
+      ),
+      box(
+        title = "Traffic Type Over Time",
+        status = "primary",
+        plotOutput("traffic_type_over_time")
+      ),
+      box(
         title = "Attack Type",
         status = "primary",
         plotOutput("attack_type_pie")
@@ -43,16 +63,6 @@ ui <- navbarPage(
         title = "Action Taken",
         status = "primary",
         plotOutput("action_taken_pie")
-      ),
-      box(
-        title = "Attack Distribution Over Time",
-        status = "primary",
-        plotOutput("attack_time_line")
-      ),
-      box(
-        title = "Countries with Same Source and Destination",
-        status = "primary",
-        plotOutput("same_source_dest_pie")
       ),
       box(
         title = "Packet Type",
@@ -215,6 +225,57 @@ server <- function(input, output) {
       geom_point(size = 1) +
       geom_line() +
       labs(x = "Czas", y = "Ilość ataków") +
+      theme_minimal()
+  })
+
+  # Wykres z protokołami w czasie
+  output$protocol_over_time <- renderPlot({
+    data$Timestamp <- as.Date(data$Timestamp)
+    data$Timestamp <- format(data$Timestamp, "%Y-%m")
+    data_protocol <- data %>%
+      select(Timestamp, Protocol) %>%
+      group_by(Timestamp, Protocol) %>%
+      summarise(n = n())
+    data_protocol$Var1 <- as.Date(paste(data_protocol$Timestamp, "-01", sep = ""),
+      format = "%Y-%m-%d"
+    )
+    ggplot(data_protocol, aes(x = Var1, y = n, color = Protocol)) +
+      geom_line() +
+      labs(x = "Czas", y = "Liczba ataków", color = "Protokół") +
+      theme_minimal()
+  })
+
+  # Wykres z typem ataków w czasie
+  output$attack_type_over_time <- renderPlot({
+    data$Timestamp <- as.Date(data$Timestamp)
+    data$Timestamp <- format(data$Timestamp, "%Y-%m")
+    data_attackType <- data %>%
+      select(Timestamp, Attack.Type) %>%
+      group_by(Timestamp, Attack.Type) %>%
+      summarise(n = n())
+    data_attackType$Var1 <- as.Date(paste(data_attackType$Timestamp, "-01", sep = ""),
+      format = "%Y-%m-%d"
+    )
+    ggplot(data_attackType, aes(x = Var1, y = n, color = Attack.Type)) +
+      geom_line() +
+      labs(x = "Czas", y = "Liczba ataków", color = "Typ ataku") +
+      theme_minimal()
+  })
+
+  # Wykres z typem ruchu w czasie
+  output$traffic_type_over_time <- renderPlot({
+    data$Timestamp <- as.Date(data$Timestamp)
+    data$Timestamp <- format(data$Timestamp, "%Y-%m")
+    data_trafficType <- data %>%
+      select(Timestamp, Traffic.Type) %>%
+      group_by(Timestamp, Traffic.Type) %>%
+      summarise(n = n())
+    data_trafficType$Var1 <- as.Date(paste(data_trafficType$Timestamp, "-01", sep = ""),
+      format = "%Y-%m-%d"
+    )
+    ggplot(data_trafficType, aes(x = Var1, y = n, color = Traffic.Type)) +
+      geom_line() +
+      labs(x = "Czas", y = "Liczba ataków", color = "Typ ruchu") +
       theme_minimal()
   })
 
