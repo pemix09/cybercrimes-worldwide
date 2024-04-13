@@ -172,6 +172,9 @@ server <- function(input, output) {
       select(Source.Country) %>%
       distinct() %>%
       rename(iso_a2 = Source.Country)
+    if (nrow(attacking_countries) == 0) {
+      return()
+    }
     attacking_countries <- left_join(attacking_countries, countries_coords, by = "iso_a2")
 
     proxy <- leafletProxy("map", data = world_spdf) %>%
