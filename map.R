@@ -31,4 +31,3 @@ world_map <- leaflet(
   setMaxBounds(-180, -70, 180, 90) %>%
   setView(lng = 0, lat = 20, zoom = 2) %>%
   addScaleBar(position = "bottomleft")
-
